@@ -1,0 +1,18 @@
+.container{
+    margin-top: 64px;
+}
+.header{
+    width: 90%;
+}
+
+.header .btn-group{
+    display: flex;
+    flex-direction: row;
+}
+
+.card-wrapper{
+    width: 90%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}

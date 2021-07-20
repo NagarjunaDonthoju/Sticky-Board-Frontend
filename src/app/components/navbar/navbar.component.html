@@ -1,0 +1,9 @@
+<mat-toolbar>
+  <a routerLink="/boards" routerLinkActive="activetab" *ngIf="authService['uid']">Boards</a>
+  <a routerLink="/profile" routerLinkActive="activetab" *ngIf="authService['uid']">Profile</a>
+  <span class="example-spacer"></span>
+  <a *ngIf="authService['uid'] && router.url.includes('/profile')" (click)= "logOut()">Log Out</a>
+  <button (click) = "goTo('/profile')" mat-icon-button aria-label="Example icon-button with menu icon" *ngIf = "authService['uid'] && !router.url.includes('/profile')">
+    <img src = "{{ authService['authUser']['photoURL'] }}">
+  </button>
+</mat-toolbar>

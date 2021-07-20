@@ -1,0 +1,39 @@
+
+<div class="container" *ngIf = "boardService['currentBoard']">
+    <div class="header">
+        
+        <div class="title" style="flex: 0.5;">
+            {{ boardService['currentBoard']['name'] }}
+        </div>
+        <div class="profile">
+            <img src = "{{boardService['currentBoard']['userDetails']['photoURL']}}">
+            <div class="info">
+                <div>
+                    {{ boardService['currentBoard']['userDetails']['firstName'] + " " +  boardService['currentBoard']['userDetails']['lastName']}}
+                </div>
+            </div>
+        </div>
+        <div class="profile">
+            <div style="font-weight: bolder; font-size: 15px;">
+                Created At
+            </div>
+            <div class="info">
+                <div>
+                    {{ boardService['currentBoard']['createdAt'] | customDate }}
+                </div>
+            </div>
+        </div>
+        <div class="btn-group">
+            <div class="btn" style="margin-right: 8px;" (click) = "openDialog()">
+                <i class="fas fa-plus" aria-label="Sync"></i>
+            </div>
+            <div class="btn" (click) = "refresh()">
+                <i class="fas fa-sync" aria-label="Sync"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-wrapper">
+        <app-card *ngFor = "let card of boardService['cards'][boardID]" [card] = "card"></app-card>
+    </div>
+</div>

@@ -1,1 +1,26 @@
 /* You can add global styles to this file, and also import other style files */
+@import url(https://fonts.googleapis.com/css?family=Lobster);
+@import url(https://fonts.googleapis.com/css?family=Poppins);
+@import "~angular-notifier/styles";
+
+body{
+    margin: 0 !important;
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+.custom-modal-class{
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px !important;
+}
+
+.custom-modal-class .mat-dialog-container{
+    box-shadow: none;
+}
+
+.custom-modal-class .mat-dialog-container .mat-form-field{
+    width: 100%;
+}
+.custom-modal-class .mat-dialog-container .mat-dialog-actions{
+    justify-content: flex-end;
+}

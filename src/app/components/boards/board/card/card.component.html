@@ -1,0 +1,18 @@
+
+
+<div class="card" *ngIf = "card != null">
+    <div class="info">
+        <img src="{{card['photoURL']}}">
+        <div>
+            {{ card['firstName'] + " " + card['lastName']}}
+        </div>
+    </div>
+
+    <div class="description">
+        {{ card['description'] }}
+    </div>
+
+    <div class="createdAt">
+        {{ card['createdAt'] | customDate }}
+    </div>
+</div>

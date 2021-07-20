@@ -1,0 +1,99 @@
+
+
+.container{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 8%;
+}
+
+.header{
+    position: relative;
+    width: 80%;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    font-family: "Poppins";
+    align-items: center;
+    box-shadow: rgba(27, 31, 35, 0.04) 0px 1px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px inset;
+}
+
+.header .btn{
+    font-weight: bolder;
+    color: black;
+    width: 52px;
+    height: 52px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.title{
+    font-size: 32px;
+    font-weight: bolder;
+    border-radius: 20px;
+}
+
+.board-wrapper{
+    margin-top: 25px;
+    width: 80%;
+    height: auto;
+}
+.board-wrapper .name{
+    font-size: 17px;
+    flex: 0.7;
+}
+
+.board{
+    padding: 16px 24px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.board:hover{
+    background: #f0f8ff
+}
+
+.board img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+.board .info{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.info div{
+    color: gray;
+    text-align: center;
+    width: 80px;
+}
+
+.profile{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile img{
+    width: 32px;
+    height: 32px;
+    border-radius: 100%;
+}
+.profile .info div{
+    width: auto;
+    font-size: 12px;
+}

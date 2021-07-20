@@ -1,0 +1,30 @@
+.container{
+    margin-top: 5%;
+}
+.myBoards .header{
+    justify-content: space-between;
+}
+
+.profileData{
+    position: relative;
+    display: flex;
+    width: 80%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 15px;
+}
+.profileData img{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+}
+
+.no-boards{
+    margin-top: 50px; 
+    font-size: 20px;
+    font-weight: bolder;
+    letter-spacing: 1px;
+    color: gray;
+}

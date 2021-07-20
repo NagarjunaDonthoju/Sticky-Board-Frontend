@@ -1,0 +1,36 @@
+
+
+<div class="container">
+    <div class="header">
+        <div class="title">
+            Boards
+        </div>
+        <div class="btn" (click) = "getAllBoards()">
+            <i class="fas fa-sync" aria-label="Sync"></i>
+        </div>
+    </div>
+
+    <div class="board-wrapper">
+        <div class="board" *ngFor = "let board of boardService['boards']; let i = index" (click) = "goToBoard(board['id'], i)">
+            <div class="name">
+                {{ board['name'] }}
+            </div>
+            <div class="profile">
+                <div style="font-weight: bolder; font-size: 15px;">
+                    Created At
+                </div>
+                <div class="info">
+                    <div>
+                        {{ board['createdAt'] | customDate }}
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                <img src = "{{ board['userDetails']['photoURL'] }}">
+                <div>
+                    {{ board['userDetails']['firstName'] }}
+                </div>
+            </div>
+        </div>
+    </div>  
+</div>

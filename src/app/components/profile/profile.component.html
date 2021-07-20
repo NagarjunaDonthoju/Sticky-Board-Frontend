@@ -1,0 +1,60 @@
+<div class="container">
+    <div class="header">
+        <div class="title">
+            Profile
+        </div>
+        <div class="btn" (click) = "openEditProfileDialog()">
+            <i class="fas fa-pen"></i>
+        </div>
+    </div>
+
+    <div *ngIf = "userService['userData']" class="profileData">
+        <img src = "{{ userService['userData']['photoURL'] }}">
+        <div>
+            <div style="font-size: 2em; font-weight: bolder; margin:8px 0;">
+                {{ userService['userData']['firstName'] }}&nbsp;{{ userService['userData']['lastName'] }}
+            </div>
+            <div style="color: gray;">
+                {{ userService['userData']['email'] }}
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="container myBoards">
+    <div class="header">
+        <div class="title">
+            My Boards
+        </div>
+        <div class="btn" (click) = "openCreateDialog()">
+            <i class="fas fa-plus"></i>
+        </div>
+    </div>
+
+    <div class="board-wrapper" *ngIf = "boardService['myBoards'].length != 0">
+        <div class="board" *ngFor = "let board of boardService['myBoards']; let i = index" (click) = "goToBoard(board['id'], i)">
+            <div class="name">
+                {{ board['name'] }}
+            </div>
+            <div class="profile">
+                <div style="font-weight: bolder; font-size: 15px;">
+                    Created At
+                </div>
+                <div class="info">
+                    <div>
+                        {{ board['createdAt'] | customDate }}
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                <img src = "{{board['userDetails']['photoURL']}}">
+                <div>
+                    {{ board['userDetails']['firstName'] }}
+                </div>
+            </div>
+        </div>
+    </div>  
+    <div *ngIf = "boardService['myBoards'].length === 0" class="no-boards">
+        No boards yet
+    </div>
+</div>

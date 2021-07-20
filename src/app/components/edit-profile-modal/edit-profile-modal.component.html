@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>{{data.heading}}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data['firstName']" maxlength="75" (keydown) = "keydownF($event)">
+  </mat-form-field>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data['lastName']" maxlength="75" (keydown) = "keydownL($event)">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button (click)="onNoClick()">Cancel</button>
+  <button mat-flat-button cdkFocusInitial color = "accent" (click) = "update()">Create</button>
+</div>
