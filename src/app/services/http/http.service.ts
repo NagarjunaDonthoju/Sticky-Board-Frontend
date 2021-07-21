@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import auth from 'firebase/app';
 import { catchError } from 'rxjs/operators';
+import { DEFAULT_LIMIT, DEFAULT_TIMESTAMP } from 'src/app/utils/constants';
+import { User } from 'src/app/utils/user';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable({
@@ -30,13 +32,13 @@ export class HttpService {
       uid : userCredential['user']?.uid
     }
     
-    return this.http.post(url, body);
+    return this.http.post<User>(url, body);
     
   }
 
   getUser(uid : String){
     const url : string = `${this.BASE_URL}/users/${uid}`;
-    return this.http.get(url);
+    return this.http.get<User>(url);
   }
 
   updateUser(firstName : string, lastName : string){
@@ -48,23 +50,43 @@ export class HttpService {
       uid : this.authService.uid
     }
     
-    return this.http.put(url, body);
+    return this.http.put<User>(url, body);
 
   }
 
-  getBoardsByUID(uid : string){
+  getBoardsByUID(uid : string, limit = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
     const url : string = `${this.BASE_URL}/boards/${uid}`;
-    return this.http.get(url);
+
+    const params = {
+      limit : limit.toString(),
+      curTimestamp : curTimestamp.toString()
+    }
+
+    return this.http.get(url, {params : params});
   }
 
-  getAllBoards(){
+  getAllBoards(limit : number = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
+    
     const url : string = `${this.BASE_URL}/boards`;
-    return this.http.get(url);
+
+    const params = {
+      limit : limit.toString(),
+      curTimestamp : curTimestamp.toString()
+    }
+
+    return this.http.get(url, { params : params });
   }
 
-  getCardsInBoard(boardID : number){
+  getCardsInBoard(boardID : number, limit : number = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
+
     const url : string = `${this.BASE_URL}/cards/${boardID}`;
-    return this.http.get(url);
+
+    const params = {
+      limit : limit.toString(),
+      curTimestamp : curTimestamp.toString()
+    }
+
+    return this.http.get(url , { params : params });
   }
 
   createBoard(boardName : string, uid: string){

@@ -57,4 +57,8 @@
     <div *ngIf = "boardService['myBoards'].length === 0" class="no-boards">
         No boards yet
     </div>
+
+    <div style="cursor: pointer;" (click) = "loadMore()" *ngIf = "boardService['myBoardsNext']">
+        Load more...
+    </div>
 </div>

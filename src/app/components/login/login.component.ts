@@ -5,6 +5,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { first, map, take } from 'rxjs/operators';
 import { HttpService } from 'src/app/services/http/http.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { User } from 'src/app/utils/user';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -34,7 +35,7 @@ export class LoginComponent implements OnInit {
 
       if(isNewUser){
 
-          this.userService.addUser(res)?.pipe(first()).subscribe(userInfo => {
+          this.userService.addUser(res)?.pipe(first()).subscribe((userInfo : User) => {
             this.userService.userData = userInfo;
             this.notifierService.hideAll();
             this.notifierService.notify("success", "User successfully logged in");

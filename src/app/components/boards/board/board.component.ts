@@ -7,6 +7,7 @@ import { first } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { BoardService } from 'src/app/services/board/board.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { DEFAULT_LIMIT, DEFAULT_TIMESTAMP } from 'src/app/utils/constants';
 import { ModalComponent } from '../../modal/modal.component';
 
 @Component({
@@ -37,23 +38,23 @@ export class BoardComponent implements OnInit {
         this.router.navigateByUrl('/boards');
       }
       else{
+        if(this.userService.userData == null){
+          const uid = this.authService.uid;
+          this.userService.getUser(uid, ()=>{});
+        }
         this.getBoardDetails(this.authService.uid, this.boardID);
-        if(this.boardService.cards[this.boardID] == undefined ){
-          this.getCardsInBoard();
+        if(!this.boardService.cards.has(this.boardID)){
+          this.getCardsInBoard(true);
         }
         
       }
       
   }
 
-  getCardsInBoard(){
-    this.boardService.getCardsInBoard(this.boardID);
+  getCardsInBoard(refresh : boolean): void{
+    this.boardService.getCardsInBoard(this.boardID, refresh, DEFAULT_LIMIT, DEFAULT_TIMESTAMP);
   }
 
-  refresh(){
-    delete this.boardService.cards[this.boardID];
-    this.getCardsInBoard();
-  }
   openDialog(): void {
     const dialogRef = this.dialog.open(ModalComponent, {
       width : "80%",
@@ -69,15 +70,26 @@ export class BoardComponent implements OnInit {
     });
   }
 
-  createCard(description : string, uid : string, boardID : number){
-    this.boardService.createCard(description, uid, boardID);
+  createCard(description : string, uid : string, boardID : number): void{
+
+      this.boardService.createCard(description, uid, boardID);
+
   }
 
-  getBoardDetails(uid : string, boardID : number){
+  getBoardDetails(uid : string, boardID : number): void{
     this.boardService.getBoardDetails(uid, boardID);
   }
 
-  ngDestroy(){
+
+  loadMore(): void {
+
+    const cardsLength : any = this.boardService.cards.get(this.boardID)!.length;
+    let curTimestamp : any = this.boardService.cards.get(this.boardID)![cardsLength - 1]['createdAt'];
+    this.boardService.getCardsInBoard(this.boardID, false, DEFAULT_LIMIT, curTimestamp);
+
+  }
+
+  ngDestroy(): void{
     this.boardService.currentBoard = null;
   }
 

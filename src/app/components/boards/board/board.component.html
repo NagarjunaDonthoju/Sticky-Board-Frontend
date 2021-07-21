@@ -5,14 +5,14 @@
         <div class="title" style="flex: 0.5;">
             {{ boardService['currentBoard']['name'] }}
         </div>
-        <div class="profile">
+        <!-- <div class="profile">
             <img src = "{{boardService['currentBoard']['userDetails']['photoURL']}}">
             <div class="info">
                 <div>
                     {{ boardService['currentBoard']['userDetails']['firstName'] + " " +  boardService['currentBoard']['userDetails']['lastName']}}
                 </div>
             </div>
-        </div>
+        </div> -->
         <div class="profile">
             <div style="font-weight: bolder; font-size: 15px;">
                 Created At
@@ -27,13 +27,16 @@
             <div class="btn" style="margin-right: 8px;" (click) = "openDialog()">
                 <i class="fas fa-plus" aria-label="Sync"></i>
             </div>
-            <div class="btn" (click) = "refresh()">
+            <div class="btn" (click) = "getCardsInBoard(true)">
                 <i class="fas fa-sync" aria-label="Sync"></i>
             </div>
         </div>
     </div>
 
     <div class="card-wrapper">
-        <app-card *ngFor = "let card of boardService['cards'][boardID]" [card] = "card"></app-card>
+        <app-card *ngFor = "let card of boardService['cards'].get(boardID)" [card] = "card"></app-card>
+    </div>
+    <div *ngIf = "boardService['cardsNext'].get(boardID)" style="cursor: pointer;" (click) = "loadMore()">
+        Load more...
     </div>
 </div>

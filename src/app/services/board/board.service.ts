@@ -3,19 +3,29 @@ import { Router } from '@angular/router';
 import { NotifierService } from 'angular-notifier';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { first } from 'rxjs/operators';
+import { Board } from 'src/app/utils/board';
+import { Card } from 'src/app/utils/card';
+import { DEFAULT_LIMIT, DEFAULT_TIMESTAMP } from 'src/app/utils/constants';
 import { HttpService } from '../http/http.service';
 import { UserService } from '../user/user.service';
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class BoardService {
 
-  boards : any = [];
-  myBoards : any = [];
-  cards : any = {};
+  boards : Array<Board> = [];
+  boardsNext : boolean = false;
 
-  currentBoard : any = null;
+  myBoards : Array<Board> = [];
+  myBoardsNext : boolean = false;
+
+  cards : Map<number, Array<Card>> = new Map<number, Array<Card>>();
+  cardsNext : Map<number, boolean> = new Map<number, boolean>();
+
+  currentBoard : Board | null = null;
 
   constructor(
     private httpService : HttpService,
@@ -26,13 +36,23 @@ export class BoardService {
   ) { }
 
 
-  findBoardsByUID(uid : string){
+  findBoardsByUID(uid : string, refresh : boolean = false, limit : number = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
 
     this.spinner.show("loader");
-    this.myBoards = [];
+    
+    if(refresh){
+      this.myBoards = [];
+    }
 
-    this.httpService.getBoardsByUID(uid).pipe(first()).subscribe(res => {
+    this.httpService.getBoardsByUID(uid, limit, curTimestamp).pipe(first()).subscribe(res => {
       const boardsInfo = JSON.parse(JSON.stringify(res)); 
+
+      if(boardsInfo.length < limit){
+        this.myBoardsNext = false;
+      }
+      else{
+        this.myBoardsNext = true;
+      }
 
       boardsInfo.forEach((board: { [x: string]: any; }) => {
         const obj = {
@@ -41,10 +61,10 @@ export class BoardService {
           createdAt : board['createdAt'],
   
           userDetails : {
-            firstName : this.userService.userData['firstName'],
-            lastName : this.userService.userData['lastName'],
-            photoURL : this.userService.userData['photoURL'],
-            email : this.userService.userData['email']
+            firstName : this.userService.userData!['firstName'],
+            lastName : this.userService.userData!['lastName'],
+            photoURL : this.userService.userData!['photoURL'],
+            email : this.userService.userData!['email']
           }
         }
       this.myBoards.push(obj);
@@ -53,11 +73,22 @@ export class BoardService {
     })
   }
 
-  getAllBoards(){
+  getAllBoards(refresh : boolean = false, limit : number = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
     this.spinner.show('loader');
-    this.boards = [];
-    this.httpService.getAllBoards().pipe(first()).subscribe(res =>{
-      const boardsInfo = JSON.parse(JSON.stringify(res)); 
+
+    if(refresh){
+      this.boards = [];
+    }
+
+    this.httpService.getAllBoards(limit, curTimestamp).pipe(first()).subscribe(res =>{
+      const boardsInfo = JSON.parse(JSON.stringify(res));
+      
+      if(boardsInfo.length < limit){
+        this.boardsNext = false;
+      }
+      else{
+        this.boardsNext = true;
+      }
 
       boardsInfo.forEach((board: { [x: string]: any; }) => {
         const obj = {
@@ -78,11 +109,32 @@ export class BoardService {
     });
   }
 
-  getCardsInBoard(boardID : number){
+  getCardsInBoard(boardID : number, refresh : boolean = false, limit : number = DEFAULT_LIMIT, curTimestamp : number = DEFAULT_TIMESTAMP){
     this.spinner.show('loader');
-    this.httpService.getCardsInBoard(boardID).pipe(first()).subscribe(res => {
-      this.cards[boardID] = res;
+
+    if(refresh){
+      this.cards.delete(boardID);
+    }
+
+    this.httpService.getCardsInBoard(boardID, limit, curTimestamp).pipe(first()).subscribe(res => {
+
+      if(!this.cards.has(boardID)){
+        this.cards.set(boardID, []);
+      }
+      const cardsInfo : Array<Card> = JSON.parse(JSON.stringify(res));
+
+      if(cardsInfo.length < limit){
+        this.cardsNext.set(boardID, false);
+      }
+      else{
+        this.cardsNext.set(boardID, true);
+      }
+
+      cardsInfo.forEach((card: Card) =>{
+        this.cards.get(boardID)?.push(card);
+      })
       this.spinner.hide('loader');
+
     }, err =>{
       this.spinner.hide('loader');
       this.notifierService.notify('error', err['error']['message'] );
@@ -108,10 +160,10 @@ export class BoardService {
         createdAt : boardInfo['createdAt'],
 
         userDetails : {
-          firstName : this.userService.userData['firstName'],
-          lastName : this.userService.userData['lastName'],
-          photoURL : this.userService.userData['photoURL'],
-          email : this.userService.userData['email']
+          firstName : this.userService.userData!['firstName'],
+          lastName : this.userService.userData!['lastName'],
+          photoURL : this.userService.userData!['photoURL'],
+          email : this.userService.userData!['email']
         }
       }
 
@@ -132,17 +184,17 @@ export class BoardService {
 
     this.httpService.createCard(description, uid, boardID).pipe(first()).subscribe(res => {
       
-      let cardInfo = JSON.parse(JSON.stringify(res));
-      cardInfo['email'] = this.userService.userData['email'];
-      cardInfo['firstName'] = this.userService.userData['firstName'];
-      cardInfo['lastName'] = this.userService.userData['lastName'];
-      cardInfo['photoURL'] = this.userService.userData['photoURL'];
+      let cardInfo : Card = JSON.parse(JSON.stringify(res));
+      cardInfo['email'] = this.userService.userData!['email'];
+      cardInfo['firstName'] = this.userService.userData!['firstName'];
+      cardInfo['lastName'] = this.userService.userData!['lastName'];
+      cardInfo['photoURL'] = this.userService.userData!['photoURL'];
 
-      if(this.cards[boardID] == undefined){
-        this.cards[boardID] = [];
+      if(!this.cards.has(boardID)){
+        this.cards.set(boardID, []);
       }
 
-      this.cards[boardID].push(cardInfo);
+      this.cards.get(boardID)!.push(cardInfo);
       this.spinner.hide('loader');
       this.notifierService.notify("success", 'Card successfully created');
 

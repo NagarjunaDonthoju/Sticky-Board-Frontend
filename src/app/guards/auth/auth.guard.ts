@@ -12,27 +12,26 @@ export class AuthGuard implements CanActivate, CanLoad {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      return this.authService.isLoggedIn().pipe(map((user)=>{
-        this.authService.updateUserUID(user);
-        if (user) {
-          return true;
-      } else {
-          this.router.navigate(['/login']);
-          return false;
-      }
-      })).pipe(take(1))
+      return this.helper();
   }
   canLoad(
     route: Route,
     segments: UrlSegment[]): Observable<boolean> | Promise<boolean> | boolean {
+      
+      return this.helper();
+  }
+
+  helper() : Observable<boolean>{
+
     return this.authService.isLoggedIn().pipe(map((user)=>{
       this.authService.updateUserUID(user);
       if (user) {
         return true;
     } else {
-      this.router.navigate(['/login']);;
+        this.router.navigate(['/login']);
         return false;
     }
-    })).pipe(take(1))
+    })).pipe(take(1));
+
   }
 }

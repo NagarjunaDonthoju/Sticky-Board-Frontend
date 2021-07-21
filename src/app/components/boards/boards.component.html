@@ -5,7 +5,7 @@
         <div class="title">
             Boards
         </div>
-        <div class="btn" (click) = "getAllBoards()">
+        <div class="btn" (click) = "getAllBoards(true)">
             <i class="fas fa-sync" aria-label="Sync"></i>
         </div>
     </div>
@@ -32,5 +32,9 @@
                 </div>
             </div>
         </div>
-    </div>  
+    </div>
+    
+    <div *ngIf = "boardService['boardsNext']" style="cursor: pointer;" (click) = "loadMore()">
+        Load more...
+    </div>
 </div>

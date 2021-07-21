@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import auth from 'firebase/app';
+import { first } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -15,9 +16,13 @@ export class AuthService {
     private angularFireAuth : AngularFireAuth,
     private router : Router
   ) { 
-    this.isLoggedIn().subscribe(user=>{
+
+    this.isLoggedIn().pipe(first()).subscribe(user=>{
+
       this.updateUserUID(user);
+      
     })
+
   }
 
   async loginWithGoogle(){
